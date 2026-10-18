@@ -31,6 +31,33 @@ Candidate sends CV
 → Interview details update automatically  
 → Dashboard reflects the latest status
 
+## Architecture
+
+```text
+Candidate
+   ↓
+HR Email Inbox
+   ↓
+CV Processing
+   ↓
+AI Data Extraction
+   ↓
+Duplicate Check
+   ↓
+Candidate Record
+   ↓
+Recruiter Review
+   ↓
+PROCEED
+   ↓
+Follow-Up Email
+   ↓
+Interview Booking
+   ↓
+Calendar Tracking
+   ↓
+Dashboard Update
+
 ## Key Features
 
 - End-to-end workflow automation
