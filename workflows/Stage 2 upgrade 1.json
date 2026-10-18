@@ -1,0 +1,720 @@
+{
+  "name": "Stage 2 upgrade 1",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "llama3.2"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are extracting structured recruitment data from a CV.\n\nUse ONLY the CV text below.\nDo not guess or invent information.\nIf a field is missing, return null.\n\nReturn ONLY valid JSON.\nDo not use markdown.\nDo not add explanations.\n\nUse exactly this structure:\n\n{\n  \"candidate_name\": null,\n  \"email\": null,\n  \"phone\": null,\n  \"location\": null,\n  \"job_role\": null,\n  \"experience_years\": null,\n  \"skills\": [],\n  \"qualifications\": [],\n  \"availability\": null,\n  \"salary_expectation\": null,\n  \"recruiter_summary\": null\n}\n\nFor skills:\n- Include only skills explicitly stated in the CV.\n- Do not infer skills from responsibilities or job duties.\n- Do not add soft skills unless they are explicitly written in the CV.\n- Do not invent or paraphrase skills.\n- Return a maximum of 10 skills.\n\nCV TEXT:\n {{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.ollama",
+      "typeVersion": 1,
+      "position": [
+        608,
+        176
+      ],
+      "id": "9617f855-4c6b-4963-be7c-ad9537578bc0",
+      "name": "Message a model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "N9DYzAGi8EnpvlcF",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $json.content;\n\ntext = text.replace(/```json/gi, '').replace(/```/g, '').trim();\n\ntry {\n  const data = JSON.parse(text);\n  return [{ json: data }];\n} catch (error) {\n  return [{\n    json: {\n      parse_error: true,\n      raw_output: text,\n      error_message: error.message\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        176
+      ],
+      "id": "8992555c-49b1-4a64-bb3c-3c37c10c8b64",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        80
+      ],
+      "id": "09fe7614-7aa6-4f4e-8361-567d3b7b73a2",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tM8yQb8ZCiJnjt37kL77uGuRjpghboI8qrQn_BUyygM",
+          "mode": "list",
+          "cachedResultName": "Recruitment Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tM8yQb8ZCiJnjt37kL77uGuRjpghboI8qrQn_BUyygM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tM8yQb8ZCiJnjt37kL77uGuRjpghboI8qrQn_BUyygM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "candidate_name": "={{ $('Code in JavaScript').item.json.candidate_name }}",
+            "location": "={{ $('Code in JavaScript').item.json.location }}",
+            "job_role": "={{ $('Code in JavaScript').item.json.job_role }}",
+            "experience_years": "={{ $('Code in JavaScript').item.json.experience_years }}",
+            "skills": "={{ $('Code in JavaScript').item.json.skills.join(\", \") }}",
+            "gmail_message_id": "={{ $('Get a message').item.json.messageId }}",
+            "email": "={{ $('Code in JavaScript').item.json.email }}",
+            "phone": "={{ $('Code in JavaScript').item.json.phone }}",
+            "qualifications": "={{ $('Code in JavaScript').item.json.qualifications.join(\", \") }}",
+            "availability": "={{ $('Code in JavaScript').item.json.availability }}",
+            "salary_expectation": "={{ $('Code in JavaScript').item.json.salary_expectation }}",
+            "recruiter_summary": "={{ $('Code in JavaScript').item.json.recruiter_summary }}",
+            "status": "REVIEW"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "candidate_name",
+              "displayName": "candidate_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "job_role",
+              "displayName": "job_role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "experience_years",
+              "displayName": "experience_years",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "skills",
+              "displayName": "skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "qualifications",
+              "displayName": "qualifications",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "availability",
+              "displayName": "availability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "salary_expectation",
+              "displayName": "salary_expectation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "recruiter_summary",
+              "displayName": "recruiter_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gmail_message_id",
+              "displayName": "gmail_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1632,
+        272
+      ],
+      "id": "e8d78cd1-82ec-4eef-8c14-1629a3f6f09d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ISt5aBHlYrbpi8XR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "q": "has:attachment"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1328,
+        176
+      ],
+      "id": "a681a723-c0ae-46fd-a515-cf880b6df4d3",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QRdILxWGdFfPMvYh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.id }}",
+        "simple": false,
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -960,
+        176
+      ],
+      "id": "7f05cd92-42c6-407d-917a-fe83637856a3",
+      "name": "Get a message",
+      "webhookId": "b66027b2-6105-4daf-8d9c-4f04c613e2bc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QRdILxWGdFfPMvYh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $binary.data.mimeType }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "12054289-6cfa-4202-975f-3f012267758f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ca8729ba-d096-461d-a637-1f9423916e7d",
+                    "leftValue": "={{ $binary.data.mimeType }}",
+                    "rightValue": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -512,
+        176
+      ],
+      "id": "bcc4153f-4f01-4437-be24-e732786ba046",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "={{ 'C:\\\\n8n-files\\\\' + $('Get a message').item.json.id + '.docx' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        -288,
+        272
+      ],
+      "id": "ef450fc4-6a6f-4ccf-b76f-e60c83927b0c",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ '\"C:\\\\Program Files\\\\LibreOffice\\\\program\\\\soffice.exe\" --headless --convert-to pdf --outdir \"C:\\\\n8n-files\" \"C:\\\\n8n-files\\\\' + $('Get a message').item.json.id + '.docx\"' }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        272
+      ],
+      "id": "f51ca244-f6bf-4a6b-b9f6-07d334b359ec",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ 'C:\\\\n8n-files\\\\' + $('Get a message').item.json.id + '.pdf' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        272
+      ],
+      "id": "03357a9f-2998-4f7a-bf99-464c67f5ac1c",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        272
+      ],
+      "id": "c64c0290-0e65-4947-9713-b007e06babb1",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tM8yQb8ZCiJnjt37kL77uGuRjpghboI8qrQn_BUyygM",
+          "mode": "list",
+          "cachedResultName": "Recruitment Automation",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tM8yQb8ZCiJnjt37kL77uGuRjpghboI8qrQn_BUyygM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tM8yQb8ZCiJnjt37kL77uGuRjpghboI8qrQn_BUyygM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "email",
+              "lookupValue": "={{ $('Code in JavaScript').item.json.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1184,
+        176
+      ],
+      "id": "6cf4626d-b0fe-423a-8d0b-2ff22947c4cb",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ISt5aBHlYrbpi8XR",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1177689e-abe1-4f3d-bd50-b706aec7907f",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "is not empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1408,
+        176
+      ],
+      "id": "a281b138-45c5-4f63-8d4c-731abddd4cf3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = [];\n\nfor (const [key, file] of Object.entries($binary || {})) {\n  items.push({\n    json: {\n      attachmentKey: key,\n      fileName: file.fileName,\n      mimeType: file.mimeType,\n    },\n    binary: {\n      data: file,\n    },\n  });\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -736,
+        176
+      ],
+      "id": "555afa46-5fca-4d0c-90d0-bd485ddc51d3",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "sendTo": "motivideo10@gmail.com",
+        "subject": "=Candidate processed: {{ $('Code in JavaScript').item.json.candidate_name }}",
+        "message": "=A new candidate has been processed successfully.  Name: {{ $('Code in JavaScript').item.json.candidate_name }} Email: {{ $('Code in JavaScript').item.json.email }} Phone: {{ $('Code in JavaScript').item.json.phone }} Role: {{ $('Code in JavaScript').item.json.job_role }} Location: {{ $('Code in JavaScript').item.json.location }}  The candidate has been added to the recruitment spreadsheet.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1840,
+        272
+      ],
+      "id": "c1929467-19b2-4742-b77b-189ef600f2ca",
+      "name": "Send a message",
+      "webhookId": "71070236-75ea-40d6-9771-814699c16b1a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QRdILxWGdFfPMvYh",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "7PWscUgvucBPwvh9",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "ff54ca2c-7fa2-4d2a-bc5b-8470ec128497",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b2ecc441dfff5149947cdf287b08a9c74efd6a3960733581dfb8fc2deb412736"
+  },
+  "nodeGroups": [],
+  "id": "S3zw0EF11dzrO0ze",
+  "tags": []
+}

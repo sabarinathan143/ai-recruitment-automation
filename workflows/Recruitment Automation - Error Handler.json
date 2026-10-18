@@ -1,0 +1,66 @@
+{
+  "name": "Recruitment Automation - Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "86c0c112-c4a4-484f-88f1-7ee2cd70dc35",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "dsabarinathan7@gmail.com",
+        "subject": "Recruitment automation failed",
+        "message": "=The recruitment automation failed.  Workflow: {{ $json.workflow.name }}  Error: {{ $json.execution.error.message }}  Execution URL: {{ $json.execution.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ad0f1b9e-4e2b-42a1-a8c1-b62795f52d09",
+      "name": "Send a message",
+      "webhookId": "eb4a1e40-0d51-44b5-8acf-103692d58959",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QRdILxWGdFfPMvYh",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a4915129-91cb-4e4c-801b-112df1b581a2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b2ecc441dfff5149947cdf287b08a9c74efd6a3960733581dfb8fc2deb412736"
+  },
+  "nodeGroups": [],
+  "id": "7PWscUgvucBPwvh9",
+  "tags": []
+}
