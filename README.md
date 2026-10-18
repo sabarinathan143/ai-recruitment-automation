@@ -92,3 +92,14 @@ Through this project, I gained practical experience in:
 ## Status
 
 Working prototype completed and tested end to end.
+
+## Screenshots
+
+### Main Recruitment Workflow
+![Main Recruitment Workflow](screenshots/Workflow 1.png)
+
+### Candidate Follow-Up and Interview Booking
+![Candidate Follow-Up](screenshots/Workflow 2.png)
+
+### Recruiter Dashboard
+![Recruiter Dashboard](screenshots/Dashboard1.png)
