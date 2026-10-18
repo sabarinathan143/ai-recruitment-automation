@@ -96,10 +96,10 @@ Working prototype completed and tested end to end.
 ## Screenshots
 
 ### Main Recruitment Workflow
-![Main Recruitment Workflow](screenshots/Workflow 1.png)
+![Main Recruitment Workflow](Workflow 1.png)
 
 ### Candidate Follow-Up and Interview Booking
-![Candidate Follow-Up](screenshots/Workflow 2.png)
+![Candidate Follow-Up](Workflow 2.png)
 
 ### Recruiter Dashboard
-![Recruiter Dashboard](screenshots/Dashboard1.png)
+![Recruiter Dashboard](Dashboard1.png)
